@@ -1,0 +1,17 @@
+.maincontainer{
+    background-color: #f4f5f8;
+    width: 90vw;
+    max-height: 100vh;
+    min-height: 90vh;
+    height: 90vh;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+@media only screen and (max-width:40em){
+    .maincontainer{
+        width: 100vw;
+        height: 95vh;
+    }
+}

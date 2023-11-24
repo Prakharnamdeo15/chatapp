@@ -1,0 +1,25 @@
+.creategroup_container{
+    background-color: white;
+    flex: 0.7;
+    align-self: center;
+    padding: 20px 10px;
+    margin: 10px;
+    display: flex;
+    border-radius: 20px;
+    justify-content: space-between;
+
+}
+.groupname{
+    width: 80%;
+    padding: 5px;
+    margin: 0px 15px;
+}
+.dark{
+    background-color: #2d3941 !important;
+    color: whitesmoke !important;
+}
+@media only screen and (max-width:40em){
+    .creategroup_container{
+        flex: 0.9;
+    }
+}
