@@ -5,17 +5,29 @@ const userRoutes = require("./Routes/userRoutes")
 const chatRoutes = require("./Routes/chatRoutes")
 const messageRoutes = require("./Routes/messageRoutes")
 const cors = require("cors");
+const http = require("http")
+const {Server} = require("socket.io")
 
 
 
 const app = express();
+// app.use(cors());
 app.use(
     cors({
       origin: "*",
     })
   );
+  app.use(express.json());
+  
+  const server = http.createServer(app);
+  const io = new Server(server,{
+    cors:{
+      origin:"*",
+      methods:["GET", "POST"]
+    }
+  })
+
 dotenv.config();
-app.use(express.json());
 
 const connectDb = async ()=>{
     try{
@@ -26,6 +38,8 @@ const connectDb = async ()=>{
 }
 
 connectDb();
+
+
  
 app.get("/",(req,res)=>{
     res.send("hello bhai")
@@ -36,37 +50,24 @@ app.use("/message", messageRoutes);
 
 const PORT = process.env.PORT || 5000
 
-const server = app.listen(PORT,console.log("server is running on 5000"));
+io.on("connection", (socket) =>{
+  // console.log(`user connected ${socket.id}`);
+  socket.emit("connection")
 
-app.use(cors());
-const io = require("socket.io")(server,{
-  cors:{
-    origin:"*",
-  },
-  pingTimeout: 60000,
+  socket.on("newMessage", (data)=>{
+    // socket.emit("messageRec",{data:1})
+
+    console.log(data.data);
+    socket.emit("gotMessage",data.data);
+    // console.log(data);
+  })
+  socket.on("join_room",(roomName)=>{
+    socket.join(roomName);
+    // console.log("joined room"+roomName)
+  })
 });
 
-io.on("connection", (socket) => {
-  socket.on("setup",(user) => {
-    socket.join(user.data._id);
-      socket.emit("connected");
-  });
 
-  socket.on("join chat", (room) => {
-    socket.join(room);
-  })
-  
+server.listen(PORT,console.log("server is running on 5000"));
 
-  socket.on("newMessage", (newMessageStatus) => {
-    console.log(newMessageStatus)
-    var chat = newMessageStatus.chat;
-    if(!chat.users){
-      return console.log("chat.user not defined")
-    }
-    chat.users.forEach((user) => {
-      if(user._id == newMessageStatus.sender._id) return;
 
-      socket.in(user._id).emit("message recieved", newMessageRecieved)
-    })
-  })
-})

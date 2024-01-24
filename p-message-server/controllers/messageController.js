@@ -6,9 +6,9 @@ const Chat = require("../modals/chatModel");
 const allMessages = expressAsyncHandler(async (req, res) => {
   try {
     const chat = await Chat.findOne({_id: req.params.chatId},{users:1})
-    console.log(chat.users[0])
+    // console.log(chat.users[0])
     const user = await User.findOne({_id: chat.users[0]},{name:1});
-    console.log(user.name)
+    // console.log(user.name)
     // console.log("hi")
     const messages = await Message.find({ chat: req.params.chatId })
 
@@ -33,7 +33,7 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
     console.log("Invalid data passed into request");
     return res.sendStatus(400);
   }
-  console.log(req.user)
+  // console.log(req.user)
   var newMessage = {
     sender: req.user._id,
     content: content,
@@ -43,7 +43,7 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
   try {
     var message = await Message.create(newMessage);
 
-    console.log(message);
+    // console.log(message);
     message = await message.populate("sender", "name pic");
     message = await message.populate("chat");
     message = await message.populate("reciever");

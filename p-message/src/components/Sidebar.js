@@ -46,7 +46,7 @@ const Sidebar = () => {
       axios.get("http://localhost:5000/chat/", config).then((response) => {
         // console.log("Data refresh in sidebar ", response.data);
         setConversations(response.data);
-        console.log(response.data);
+        // console.log(response.data);
         // setRefresh(!refresh);
         // console.log(response.data)
       });
